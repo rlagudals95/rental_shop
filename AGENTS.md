@@ -19,7 +19,7 @@
   - `npm run typecheck` 통과
   - `npm run lint` 통과
   - `npm run format:check` 통과
-- 커밋 전 pre-commit 훅(lint-staged)으로 자동 검증 수행
+- 커밋 전 pre-commit 훅(lint-staged)으로 자동 검증 수행하기
 
 ---
 
