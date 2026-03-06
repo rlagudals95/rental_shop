@@ -33,6 +33,12 @@ export default async function CompletePage({ searchParams }: CompletePageProps) 
             다른 상품 더 보기
           </Link>
           <Link
+            href="/admin/mock-leads"
+            className="block w-full rounded-xl border border-black/10 py-3 text-sm font-semibold"
+          >
+            접수 목록 보기 (mock)
+          </Link>
+          <Link
             href="/"
             className="block w-full rounded-xl border border-black/10 py-3 text-sm font-semibold"
           >

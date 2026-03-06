@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { mockLeads } from "@/features/rental/mock-db";
+
 type ApplyPayload = {
   name?: string;
   phone?: string;
@@ -17,11 +19,23 @@ export async function POST(request: Request) {
   }
 
   const applyId = `apply_${Date.now()}`;
+  const submittedAt = new Date().toISOString();
+
+  mockLeads.push({
+    applyId,
+    submittedAt,
+    name: body.name,
+    phone: body.phone,
+    product: body.product,
+    area: body.area,
+    date: body.date,
+    memo: body.memo,
+  });
 
   return NextResponse.json({
     ok: true,
     applyId,
-    submittedAt: new Date().toISOString(),
+    submittedAt,
     payload: body,
   });
 }
