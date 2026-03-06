@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 type CompletePageProps = {
-  searchParams: Promise<{ name?: string; product?: string }>;
+  searchParams: Promise<{ name?: string; phone?: string; product?: string; area?: string }>;
 };
 
 export default async function CompletePage({ searchParams }: CompletePageProps) {
-  const { name, product } = await searchParams;
+  const { name, phone, product, area } = await searchParams;
 
   return (
     <div className="min-h-screen bg-[#f4f5f7] px-4 py-10 text-[#111]">
@@ -17,7 +17,13 @@ export default async function CompletePage({ searchParams }: CompletePageProps) 
           영업시간 내 순차적으로 연락드릴게요.
         </p>
 
-        {product ? <p className="mt-2 text-xs text-black/45">선택 상품: {product}</p> : null}
+        {product || phone || area ? (
+          <div className="mt-3 rounded-xl bg-[#f6f7f9] p-3 text-left text-xs text-black/55">
+            {product ? <p>선택 상품: {product}</p> : null}
+            {phone ? <p className="mt-1">연락처: {phone}</p> : null}
+            {area ? <p className="mt-1">설치 지역: {area}</p> : null}
+          </div>
+        ) : null}
 
         <div className="mt-6 space-y-2">
           <Link

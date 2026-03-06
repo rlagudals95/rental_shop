@@ -1,7 +1,10 @@
+export type RentalCategory = "정수기" | "공기청정기" | "안마의자" | "주방가전";
+
 export type RentalProduct = {
   slug: string;
   brand: string;
   name: string;
+  category: RentalCategory;
   monthlyPrice: number;
   originalPrice: number;
   reviewCount: number;
@@ -10,6 +13,7 @@ export type RentalProduct = {
   summary: string;
   contract: string;
   management: string;
+  specs: Array<{ label: string; value: string }>;
 };
 
 export const rentalProducts: RentalProduct[] = [
@@ -17,6 +21,7 @@ export const rentalProducts: RentalProduct[] = [
     slug: "coway-icon-ice",
     brand: "코웨이",
     name: "아이콘 얼음정수기",
+    category: "정수기",
     monthlyPrice: 31900,
     originalPrice: 36900,
     reviewCount: 1293,
@@ -26,11 +31,18 @@ export const rentalProducts: RentalProduct[] = [
     summary: "얼음 + 냉온정수 올인원 직수형",
     contract: "60개월",
     management: "방문관리",
+    specs: [
+      { label: "제품 유형", value: "직수형 얼음정수기" },
+      { label: "약정 기간", value: "60개월" },
+      { label: "관리 방식", value: "방문관리" },
+      { label: "설치", value: "전국 설치 가능" },
+    ],
   },
   {
     slug: "lg-360-air",
     brand: "LG 퓨리케어",
     name: "360 공기청정기 플러스",
+    category: "공기청정기",
     monthlyPrice: 24900,
     originalPrice: 29900,
     reviewCount: 824,
@@ -40,11 +52,18 @@ export const rentalProducts: RentalProduct[] = [
     summary: "초미세먼지 케어 · 저소음 운전",
     contract: "48개월",
     management: "셀프관리",
+    specs: [
+      { label: "적용 면적", value: "대형 거실형" },
+      { label: "약정 기간", value: "48개월" },
+      { label: "관리 방식", value: "셀프관리" },
+      { label: "필터", value: "초미세먼지 복합필터" },
+    ],
   },
   {
     slug: "ceragem-master-v7",
     brand: "세라젬",
     name: "마스터 V7 척추 의료가전",
+    category: "안마의자",
     monthlyPrice: 49000,
     originalPrice: 55000,
     reviewCount: 407,
@@ -54,11 +73,18 @@ export const rentalProducts: RentalProduct[] = [
     summary: "온열·지압 복합 헬스케어",
     contract: "60개월",
     management: "방문관리",
+    specs: [
+      { label: "제품 유형", value: "척추 의료가전" },
+      { label: "약정 기간", value: "60개월" },
+      { label: "관리 방식", value: "방문관리" },
+      { label: "부가기능", value: "온열/리클라이닝" },
+    ],
   },
   {
     slug: "samsung-cube-air",
     brand: "삼성 비스포크",
     name: "큐브 에어 공기청정기",
+    category: "공기청정기",
     monthlyPrice: 19900,
     originalPrice: 23900,
     reviewCount: 612,
@@ -67,11 +93,18 @@ export const rentalProducts: RentalProduct[] = [
     summary: "컴팩트 사이즈 · 강력 필터",
     contract: "36개월",
     management: "셀프관리",
+    specs: [
+      { label: "적용 면적", value: "원룸/침실형" },
+      { label: "약정 기간", value: "36개월" },
+      { label: "관리 방식", value: "셀프관리" },
+      { label: "소음", value: "저소음 모드 지원" },
+    ],
   },
   {
     slug: "cuckoo-inout",
     brand: "쿠쿠",
     name: "인앤아웃 직수 정수기",
+    category: "정수기",
     monthlyPrice: 21900,
     originalPrice: 26900,
     reviewCount: 935,
@@ -81,6 +114,12 @@ export const rentalProducts: RentalProduct[] = [
     summary: "슬림 디자인 · 직수 살균",
     contract: "36개월",
     management: "방문관리",
+    specs: [
+      { label: "제품 유형", value: "직수형 정수기" },
+      { label: "약정 기간", value: "36개월" },
+      { label: "관리 방식", value: "방문관리" },
+      { label: "살균", value: "UV 살균 지원" },
+    ],
   },
 ];
 

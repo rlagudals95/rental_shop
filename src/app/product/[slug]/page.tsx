@@ -53,6 +53,18 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             <p className="text-black/65">- 약정 기간 내 무상 A/S 지원</p>
             <p className="text-black/65">- 약정/관리 조건은 상담 시 최종 확정</p>
           </div>
+
+          <div className="mt-4 overflow-hidden rounded-2xl border border-black/10">
+            <div className="bg-[#f6f7f9] px-4 py-3 text-sm font-semibold">상품 스펙</div>
+            <div className="divide-y divide-black/5 text-sm">
+              {product.specs.map((spec) => (
+                <div key={spec.label} className="flex items-center justify-between px-4 py-3">
+                  <p className="text-black/45">{spec.label}</p>
+                  <p className="font-medium text-black/80">{spec.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
         <div className="fixed bottom-0 left-0 right-0 border-t border-black/10 bg-white/95 p-3 backdrop-blur">
@@ -64,10 +76,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               목록으로
             </Link>
             <Link
-              href={`/funnel/apply?product=${product.slug}`}
+              href={`/funnel/apply?product=${product.slug}&step=1`}
               className="flex-[1.4] rounded-xl bg-black py-3 text-center text-sm font-semibold text-white"
             >
-              상담 신청하기
+              상담 시작하기
             </Link>
           </div>
         </div>

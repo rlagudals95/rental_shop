@@ -1,11 +1,49 @@
 import Link from "next/link";
 
 import { ProductListCard } from "@/components/rental/product-list-card";
-import { rentalProducts } from "@/features/rental/mock";
+import { type RentalCategory, rentalProducts } from "@/features/rental/mock";
 
-const quickFilters = ["전체", "정수기", "공기청정기", "비데", "안마의자"];
+const quickFilters = ["전체", "정수기", "공기청정기", "안마의자", "주방가전"] as const;
+const sortKeys = ["popular", "low", "high", "reviews"] as const;
 
-export default function ApplianceRentalPage() {
+type SortKey = (typeof sortKeys)[number];
+
+type CategoryPageProps = {
+  searchParams: Promise<{ category?: string; sort?: string }>;
+};
+
+function sortProducts(items: typeof rentalProducts, sort: SortKey) {
+  if (sort === "low") return [...items].sort((a, b) => a.monthlyPrice - b.monthlyPrice);
+  if (sort === "high") return [...items].sort((a, b) => b.monthlyPrice - a.monthlyPrice);
+  if (sort === "reviews") return [...items].sort((a, b) => b.reviewCount - a.reviewCount);
+  return [...items].sort(
+    (a, b) => b.reviewCount + b.monthlyPrice - (a.reviewCount + a.monthlyPrice),
+  );
+}
+
+const sortLabel: Record<SortKey, string> = {
+  popular: "인기순",
+  low: "낮은 가격순",
+  high: "높은 가격순",
+  reviews: "리뷰 많은순",
+};
+
+export default async function ApplianceRentalPage({ searchParams }: CategoryPageProps) {
+  const { category = "전체", sort = "popular" } = await searchParams;
+
+  const selectedCategory = quickFilters.includes(category as (typeof quickFilters)[number])
+    ? category
+    : "전체";
+
+  const selectedSort = sortKeys.includes(sort as SortKey) ? (sort as SortKey) : "popular";
+
+  const filtered =
+    selectedCategory === "전체"
+      ? rentalProducts
+      : rentalProducts.filter((item) => item.category === (selectedCategory as RentalCategory));
+
+  const products = sortProducts(filtered, selectedSort);
+
   return (
     <div className="min-h-screen bg-[#f2f3f5] text-[#131313]">
       <div className="mx-auto w-full max-w-[460px] bg-[#f2f3f5] pb-12">
@@ -25,32 +63,53 @@ export default function ApplianceRentalPage() {
         <section className="px-4 pt-3">
           <div className="overflow-x-auto no-scrollbar">
             <div className="flex gap-2">
-              {quickFilters.map((filter, idx) => (
-                <button
-                  key={filter}
-                  className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ${
-                    idx === 0
-                      ? "bg-black text-white"
-                      : "border border-black/10 bg-white text-black/65"
-                  }`}
-                >
-                  {filter}
-                </button>
-              ))}
+              {quickFilters.map((filter) => {
+                const active = filter === selectedCategory;
+
+                return (
+                  <Link
+                    key={filter}
+                    href={`/category/appliance-rental?category=${encodeURIComponent(filter)}&sort=${selectedSort}`}
+                    className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                      active
+                        ? "bg-black text-white"
+                        : "border border-black/10 bg-white text-black/65"
+                    }`}
+                  >
+                    {filter}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
 
         <section className="px-4 pt-3">
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-xs text-black/55">총 {rentalProducts.length}개 상품</p>
-            <button className="rounded-full border border-black/10 bg-white px-2.5 py-1 text-[11px] font-semibold text-black/60">
-              인기순 ▾
-            </button>
+            <p className="text-xs text-black/55">총 {products.length}개 상품</p>
+            <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+              {sortKeys.map((key) => {
+                const active = key === selectedSort;
+
+                return (
+                  <Link
+                    key={key}
+                    href={`/category/appliance-rental?category=${encodeURIComponent(selectedCategory)}&sort=${key}`}
+                    className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                      active
+                        ? "bg-black text-white"
+                        : "border border-black/10 bg-white text-black/60"
+                    }`}
+                  >
+                    {sortLabel[key]}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           <div className="space-y-2.5">
-            {rentalProducts.map((product) => (
+            {products.map((product) => (
               <ProductListCard key={product.slug} product={product} />
             ))}
           </div>
