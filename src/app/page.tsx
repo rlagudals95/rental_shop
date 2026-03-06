@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const categoryTabs = ["전체", "가전 렌탈", "정수기", "공기청정기", "안마의자", "주방가전"];
 
@@ -106,9 +107,12 @@ export default function Home() {
             설치/관리/AS까지 포함된 올인원 렌탈 서비스를 만나보세요.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
-            <button className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
+            <Link
+              href="/category/appliance-rental"
+              className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black"
+            >
               전체 상품 보기
-            </button>
+            </Link>
             <button className="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white">
               상담 신청
             </button>
