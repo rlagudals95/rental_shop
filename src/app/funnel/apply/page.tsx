@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ApplyStepTwoForm } from "@/components/rental/apply-step-two-form";
 import { rentalProducts } from "@/features/rental/mock";
 
 type ApplyPageProps = {
@@ -72,51 +73,15 @@ export default async function ApplyPage({ searchParams }: ApplyPageProps) {
             </button>
           </form>
         ) : (
-          <form className="mt-4 space-y-3" action="/funnel/complete">
-            <label className="block text-sm">
-              <span className="mb-1 block text-xs text-black/60">희망 설치 지역</span>
-              <input
-                name="area"
-                required
-                className="w-full rounded-xl border border-black/15 px-3 py-2.5 outline-none focus:border-black"
-                placeholder="서울 강남구"
-              />
-            </label>
-
-            <label className="block text-sm">
-              <span className="mb-1 block text-xs text-black/60">희망 설치일</span>
-              <input
-                name="date"
-                className="w-full rounded-xl border border-black/15 px-3 py-2.5 outline-none focus:border-black"
-                placeholder="예: 다음 주 화요일"
-              />
-            </label>
-
-            <label className="block text-sm">
-              <span className="mb-1 block text-xs text-black/60">문의 내용</span>
-              <textarea
-                name="memo"
-                rows={4}
-                className="w-full rounded-xl border border-black/15 px-3 py-2.5 outline-none focus:border-black"
-                placeholder="원하는 모델 / 설치 희망 시간"
-              />
-            </label>
-
-            <input type="hidden" name="name" value={name} />
-            <input type="hidden" name="phone" value={phone} />
-            <input type="hidden" name="product" value={selected.slug} />
-
-            <button className="mt-2 w-full rounded-xl bg-black py-3 text-sm font-semibold text-white">
-              상담 신청 완료
-            </button>
-
+          <>
+            <ApplyStepTwoForm product={selected.slug} name={name} phone={phone} />
             <Link
               href={`/funnel/apply?product=${selected.slug}&step=1&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`}
-              className="block text-center text-xs font-semibold text-black/50 underline"
+              className="mt-2 block text-center text-xs font-semibold text-black/50 underline"
             >
               이전 단계
             </Link>
-          </form>
+          </>
         )}
 
         <Link
