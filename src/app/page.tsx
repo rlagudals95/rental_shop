@@ -5,6 +5,8 @@ const categoryTabs = ["전체", "가전 렌탈", "정수기", "공기청정기",
 
 type Product = {
   id: number;
+  slug: string;
+  category: "정수기" | "공기청정기" | "안마의자" | "주방가전";
   brand: string;
   name: string;
   monthlyPrice: string;
@@ -16,6 +18,8 @@ type Product = {
 const products: Product[] = [
   {
     id: 1,
+    slug: "coway-icon-ice",
+    category: "정수기",
     brand: "코웨이",
     name: "아이콘 얼음정수기",
     monthlyPrice: "월 31,900원",
@@ -26,6 +30,8 @@ const products: Product[] = [
   },
   {
     id: 2,
+    slug: "lg-360-air",
+    category: "공기청정기",
     brand: "LG 오브제",
     name: "퓨리케어 360 공기청정기",
     monthlyPrice: "월 24,900원",
@@ -36,6 +42,8 @@ const products: Product[] = [
   },
   {
     id: 3,
+    slug: "ceragem-master-v7",
+    category: "안마의자",
     brand: "세라젬",
     name: "마스터 V7 안마의자",
     monthlyPrice: "월 49,000원",
@@ -45,6 +53,8 @@ const products: Product[] = [
   },
   {
     id: 4,
+    slug: "samsung-cube-air",
+    category: "공기청정기",
     brand: "삼성 비스포크",
     name: "비스포크 큐브 에어",
     monthlyPrice: "월 19,900원",
@@ -54,6 +64,8 @@ const products: Product[] = [
   },
   {
     id: 5,
+    slug: "cuckoo-inout",
+    category: "정수기",
     brand: "쿠쿠",
     name: "인앤아웃 직수 정수기",
     monthlyPrice: "월 21,900원",
@@ -64,6 +76,8 @@ const products: Product[] = [
   },
   {
     id: 6,
+    slug: "cuckoo-inout",
+    category: "주방가전",
     brand: "SK매직",
     name: "올인원 식기세척기",
     monthlyPrice: "월 29,900원",
@@ -113,17 +127,21 @@ export default function Home() {
             >
               전체 상품 보기
             </Link>
-            <button className="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white">
+            <Link
+              href="/funnel/apply"
+              className="rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white"
+            >
               상담 신청
-            </button>
+            </Link>
           </div>
         </section>
 
         <section className="mt-6 md:mt-8">
           <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">
             {categoryTabs.map((tab, index) => (
-              <button
+              <Link
                 key={tab}
+                href={`/category/appliance-rental?category=${encodeURIComponent(tab === "가전 렌탈" ? "전체" : tab)}&sort=popular`}
                 className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
                   index === 1
                     ? "bg-black text-white"
@@ -131,14 +149,15 @@ export default function Home() {
                 }`}
               >
                 {tab}
-              </button>
+              </Link>
             ))}
           </div>
         </section>
 
         <section className="mt-6 grid grid-cols-2 gap-3 md:mt-8 md:grid-cols-3 md:gap-5">
           {products.map((product) => (
-            <article
+            <Link
+              href={`/product/${product.slug}`}
               key={product.id}
               className="group overflow-hidden rounded-2xl border border-black/5 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
             >
@@ -165,7 +184,7 @@ export default function Home() {
                 <p className="pt-1 text-base font-extrabold md:text-lg">{product.monthlyPrice}</p>
                 <p className="text-xs text-black/55 md:text-sm">{product.period}</p>
               </div>
-            </article>
+            </Link>
           ))}
         </section>
       </main>
