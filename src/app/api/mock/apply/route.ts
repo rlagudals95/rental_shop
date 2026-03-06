@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { mockLeads } from "@/features/rental/mock-db";
+import { mockLeads } from "@/entities/lead/model/mock-db";
 
 type ApplyPayload = {
   name?: string;

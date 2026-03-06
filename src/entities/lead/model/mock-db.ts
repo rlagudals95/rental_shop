@@ -1,4 +1,4 @@
-type MockLead = {
+export type MockLead = {
   applyId: string;
   submittedAt: string;
   name: string;
@@ -20,5 +20,3 @@ if (!g.__mockLeads) {
 }
 
 export const mockLeads = g.__mockLeads;
-
-export type { MockLead };

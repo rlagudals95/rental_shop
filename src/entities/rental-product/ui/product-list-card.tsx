@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { formatWon, type RentalProduct } from "@/features/rental/mock";
+import { formatWon, type RentalProduct } from "@/entities/rental-product";
 
 type ProductListCardProps = {
   product: RentalProduct;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { rentalProducts } from "@/features/rental/mock";
+import { rentalProducts } from "@/entities/rental-product";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

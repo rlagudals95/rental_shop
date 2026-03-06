@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { mockLeads } from "@/features/rental/mock-db";
+import { mockLeads } from "@/entities/lead/model/mock-db";
 
 export async function GET() {
   return NextResponse.json({

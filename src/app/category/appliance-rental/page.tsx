@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { CategoryFeed } from "@/components/rental/category-feed";
+import { CategoryFeed } from "@/features/rental-catalog/ui/category-feed";
 
 export default function ApplianceRentalPage() {
   return (

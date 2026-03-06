@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { ProductListCard } from "@/components/rental/product-list-card";
-import type { RentalProduct } from "@/features/rental/mock";
+import { type RentalProduct } from "@/entities/rental-product";
+import { ProductListCard } from "@/entities/rental-product/ui/product-list-card";
 
 type SortKey = "popular" | "low" | "high" | "reviews";
 

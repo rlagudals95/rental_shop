@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { formatWon, rentalProducts } from "@/features/rental/mock";
+import { formatWon, rentalProducts } from "@/entities/rental-product";
 
 type ProductDetailPageProps = {
   params: Promise<{ slug: string }>;

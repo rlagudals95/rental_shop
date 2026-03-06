@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { rentalProducts } from "@/features/rental/mock";
+import { rentalProducts } from "@/entities/rental-product";
 
 type RouteContext = {
   params: Promise<{ slug: string }>;

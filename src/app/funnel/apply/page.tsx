@@ -1,7 +1,7 @@
 import Link from "next/link";
 
-import { ApplyStepTwoForm } from "@/components/rental/apply-step-two-form";
-import { rentalProducts } from "@/features/rental/mock";
+import { rentalProducts } from "@/entities/rental-product";
+import { ApplyStepTwoForm } from "@/features/rental-apply/ui/apply-step-two-form";
 
 type ApplyPageProps = {
   searchParams: Promise<{ product?: string; step?: string; name?: string; phone?: string }>;
