@@ -6,11 +6,15 @@
     "build": "nest build",
     "start": "node dist/main",
     "start:dev": "nest start --watch",
-    "lint": "eslint 'src/**/*.ts'",
-    "format": "prettier --write 'src/**/*.ts' 'prisma/**/*.prisma'",
+    "lint": "eslint 'src/**/*.ts' 'prisma/**/*.ts'",
+    "format": "prettier --write 'src/**/*.ts' 'prisma/**/*.{prisma,ts}'",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:deploy": "prisma migrate deploy"
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:seed": "ts-node prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "npm run prisma:seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

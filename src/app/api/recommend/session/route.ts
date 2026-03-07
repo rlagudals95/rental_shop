@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { recommendationService } from "@/features/recommendation/server";
 import { validateProfile } from "@/features/recommendation/server/validation";
 import { fail, ok } from "@/lib/api-response";
+import { hasBackendProxy, proxyToBackend } from "@/lib/backend-proxy";
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +15,10 @@ export async function POST(request: Request) {
         fail("VALIDATION_ERROR", "필수 항목이 누락되었습니다.", false, parsed.details),
         { status: 400 },
       );
+    }
+
+    if (hasBackendProxy()) {
+      return await proxyToBackend("/recommend/session", "POST", parsed.value);
     }
 
     const result = await recommendationService.recommend(parsed.value);

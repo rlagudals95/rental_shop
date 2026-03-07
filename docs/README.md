@@ -11,6 +11,7 @@
 7. [API_ERROR_CONTRACT.md](/Users/hyeongmin/Desktop/workspace/rental_shop/docs/API_ERROR_CONTRACT.md)
 8. [LLM_PROMPT_EVAL_V1.md](/Users/hyeongmin/Desktop/workspace/rental_shop/docs/LLM_PROMPT_EVAL_V1.md)
 9. [LEAD_HANDOFF_SCHEMA.md](/Users/hyeongmin/Desktop/workspace/rental_shop/docs/LEAD_HANDOFF_SCHEMA.md)
+10. [BACKEND_ENV_SETUP.md](/Users/hyeongmin/Desktop/workspace/rental_shop/docs/BACKEND_ENV_SETUP.md)
 
 ## 2. 구현 시작 체크리스트
 

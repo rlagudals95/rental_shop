@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { LeadHandoffPayload } from "@/entities/lead/model/types";
 import { leadRepository } from "@/entities/lead/server";
 import { fail, ok } from "@/lib/api-response";
+import { hasBackendProxy, proxyToBackend } from "@/lib/backend-proxy";
 
 const isPhoneValid = (phone: string) => /^\d{10,11}$/.test(phone);
 
@@ -50,6 +51,10 @@ export async function POST(request: Request) {
       submittedAt: body.submittedAt ?? new Date().toISOString(),
     } as LeadHandoffPayload;
 
+    if (hasBackendProxy()) {
+      return await proxyToBackend("/leads", "POST", payload);
+    }
+
     const { lead, duplicated } = await leadRepository.createOrUpdateByDedup(payload);
 
     if (duplicated) {
@@ -80,6 +85,10 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
+    if (hasBackendProxy()) {
+      return await proxyToBackend("/leads", "GET");
+    }
+
     const leads = await leadRepository.list();
     return NextResponse.json(ok({ leads }));
   } catch {

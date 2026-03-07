@@ -6,6 +6,7 @@ import {
 } from "@/features/explanation/server/explain-adapter";
 import type { RankedRecommendation, UserProfile } from "@/features/recommendation/model/types";
 import { fail, ok } from "@/lib/api-response";
+import { hasBackendProxy, proxyToBackend } from "@/lib/backend-proxy";
 
 const adapter = new MockExplainAdapter();
 
@@ -23,6 +24,10 @@ export async function POST(request: Request) {
         fail("VALIDATION_ERROR", "입력 스키마가 올바르지 않습니다.", false),
         { status: 400 },
       );
+    }
+
+    if (hasBackendProxy()) {
+      return await proxyToBackend("/recommend/explain", "POST", body);
     }
 
     try {
