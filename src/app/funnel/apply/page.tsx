@@ -1,96 +1,117 @@
-import Link from "next/link";
+"use client";
 
-import { rentalProducts } from "@/entities/rental-product";
-import { ApplyStepTwoForm } from "@/features/rental-apply/ui/apply-step-two-form";
+import { useRouter } from "next/navigation";
+import type { FormEvent } from "react";
+import { useMemo, useState } from "react";
 
-type ApplyPageProps = {
-  searchParams: Promise<{ product?: string; step?: string; name?: string; phone?: string }>;
-};
+import { logEvent } from "@/features/analytics/log-event";
+import type { UserProfile } from "@/features/recommendation/model/types";
 
-export default async function ApplyPage({ searchParams }: ApplyPageProps) {
-  const { product, step = "1", name = "", phone = "" } = await searchParams;
-  const selected = rentalProducts.find((item) => item.slug === product) ?? rentalProducts[0];
+const genSessionId = () => `sess_${Math.random().toString(36).slice(2, 10)}`;
 
-  const currentStep = step === "2" ? 2 : 1;
+export default function FunnelApplyPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const sessionId = useMemo(() => genSessionId(), []);
+
+  const [form, setForm] = useState<Omit<UserProfile, "sessionId">>({
+    householdSize: 1,
+    residenceType: "jeonse_or_monthly",
+    movingWithin24m: true,
+    budgetRange: "30000_39999",
+    requiredFeatures: ["cold", "purify"],
+    wantsIce: false,
+    carePreference: "self",
+    spaceConstraint: "medium",
+    biggestConcern: "termination_fee",
+  });
+
+  const onSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
+
+    const payload: UserProfile = { ...form, sessionId };
+    sessionStorage.setItem(`profile:${sessionId}`, JSON.stringify(payload));
+
+    logEvent("onboarding_complete", { sessionId });
+    router.push(`/funnel/result?sessionId=${sessionId}`);
+  };
 
   return (
-    <div className="min-h-screen bg-[#f4f5f7] px-4 py-6 text-[#111]">
-      <div className="mx-auto w-full max-w-[460px] rounded-3xl bg-white p-5">
-        <p className="text-xs font-semibold text-black/45">렌탈 상담 퍼널</p>
-        <h1 className="mt-1 text-xl font-extrabold">상담 신청 정보 입력</h1>
+    <main className="mx-auto min-h-screen w-full max-w-2xl px-4 py-8">
+      <h1 className="text-2xl font-bold">1분 추천 시작</h1>
+      <p className="mt-2 text-sm text-black/60">필수 조건만 입력하면 3개 추천을 바로 보여드려요.</p>
 
-        <div className="mt-3 flex gap-2 text-[11px] font-semibold">
-          <span
-            className={`rounded-full px-2 py-1 ${
-              currentStep === 1 ? "bg-black text-white" : "bg-[#eceef2] text-black/60"
-            }`}
+      <form
+        onSubmit={onSubmit}
+        className="mt-6 space-y-4 rounded-2xl border border-black/10 bg-white p-4"
+      >
+        <label className="block text-sm">
+          가구 수
+          <input
+            type="number"
+            min={1}
+            max={6}
+            value={form.householdSize}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, householdSize: Number(e.target.value) }))
+            }
+            className="mt-1 w-full rounded-lg border border-black/15 px-3 py-2"
+          />
+        </label>
+
+        <label className="block text-sm">
+          월 예산
+          <select
+            value={form.budgetRange}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                budgetRange: e.target.value as UserProfile["budgetRange"],
+              }))
+            }
+            className="mt-1 w-full rounded-lg border border-black/15 px-3 py-2"
           >
-            1) 고객 정보
-          </span>
-          <span
-            className={`rounded-full px-2 py-1 ${
-              currentStep === 2 ? "bg-black text-white" : "bg-[#eceef2] text-black/60"
-            }`}
-          >
-            2) 설치 정보
-          </span>
-        </div>
+            <option value="under_29999">3만원 미만</option>
+            <option value="30000_39999">3만원대</option>
+            <option value="40000_plus">4만원 이상</option>
+          </select>
+        </label>
 
-        <div className="mt-4 rounded-2xl bg-[#f6f7f9] p-4">
-          <p className="text-xs text-black/50">선택 상품</p>
-          <p className="mt-1 text-sm font-bold">{selected.name}</p>
-        </div>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.movingWithin24m}
+            onChange={(e) => setForm((prev) => ({ ...prev, movingWithin24m: e.target.checked }))}
+          />
+          24개월 내 이사 가능성이 있어요
+        </label>
 
-        {currentStep === 1 ? (
-          <form className="mt-4 space-y-3" action="/funnel/apply">
-            <label className="block text-sm">
-              <span className="mb-1 block text-xs text-black/60">이름</span>
-              <input
-                name="name"
-                required
-                className="w-full rounded-xl border border-black/15 px-3 py-2.5 outline-none focus:border-black"
-                placeholder="홍길동"
-                defaultValue={name}
-              />
-            </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.wantsIce}
+            onChange={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                wantsIce: e.target.checked,
+                requiredFeatures: e.target.checked
+                  ? ["cold", "hot", "purify", "ice"]
+                  : ["cold", "purify"],
+              }))
+            }
+          />
+          얼음 기능이 꼭 필요해요
+        </label>
 
-            <label className="block text-sm">
-              <span className="mb-1 block text-xs text-black/60">연락처</span>
-              <input
-                name="phone"
-                required
-                className="w-full rounded-xl border border-black/15 px-3 py-2.5 outline-none focus:border-black"
-                placeholder="010-1234-5678"
-                defaultValue={phone}
-              />
-            </label>
-
-            <input type="hidden" name="product" value={selected.slug} />
-            <input type="hidden" name="step" value="2" />
-
-            <button className="mt-2 w-full rounded-xl bg-black py-3 text-sm font-semibold text-white">
-              다음 단계
-            </button>
-          </form>
-        ) : (
-          <>
-            <ApplyStepTwoForm product={selected.slug} name={name} phone={phone} />
-            <Link
-              href={`/funnel/apply?product=${selected.slug}&step=1&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`}
-              className="mt-2 block text-center text-xs font-semibold text-black/50 underline"
-            >
-              이전 단계
-            </Link>
-          </>
-        )}
-
-        <Link
-          href={`/product/${selected.slug}`}
-          className="mt-3 block text-center text-xs font-semibold text-black/50 underline"
+        <button
+          disabled={loading}
+          className="w-full rounded-xl bg-black px-4 py-3 font-semibold text-white disabled:opacity-50"
         >
-          상품 상세로 돌아가기
-        </Link>
-      </div>
-    </div>
+          {loading ? "추천 준비 중..." : "추천 결과 보기"}
+        </button>
+      </form>
+    </main>
   );
 }
