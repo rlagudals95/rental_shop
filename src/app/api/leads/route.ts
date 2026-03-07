@@ -26,13 +26,40 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!body.recommendation.top3 || body.recommendation.top3.length !== 3) {
+      return NextResponse.json(
+        fail("VALIDATION_ERROR", "추천 상품 top3는 반드시 3개여야 합니다.", false, [
+          { field: "recommendation.top3", reason: "must_be_3" },
+        ]),
+        { status: 400 },
+      );
+    }
+
+    if (!body.recommendation.top3.includes(body.recommendation.selectedProductId)) {
+      return NextResponse.json(
+        fail("VALIDATION_ERROR", "선택 상품은 top3 안에 있어야 합니다.", false, [
+          { field: "recommendation.selectedProductId", reason: "not_in_top3" },
+        ]),
+        { status: 400 },
+      );
+    }
+
     const payload: LeadHandoffPayload = {
       ...body,
       leadId: body.leadId ?? `lead_${Math.random().toString(36).slice(2, 10)}`,
       submittedAt: body.submittedAt ?? new Date().toISOString(),
     } as LeadHandoffPayload;
 
-    const lead = await leadRepository.createOrUpdateByDedup(payload);
+    const { lead, duplicated } = await leadRepository.createOrUpdateByDedup(payload);
+
+    if (duplicated) {
+      return NextResponse.json(
+        fail("LEAD_DUPLICATED", "동일한 리드가 이미 접수되어 기존 정보를 반환합니다.", false, [
+          { leadId: lead.leadId },
+        ]),
+        { status: 409 },
+      );
+    }
 
     return NextResponse.json(
       ok({

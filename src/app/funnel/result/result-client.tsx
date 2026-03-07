@@ -72,6 +72,10 @@ export function ResultClient({ sessionId }: ResultClientProps) {
         sessionId,
         recommendedProductIds: recommendJson.data.top3.map((item) => item.productId),
       });
+      logEvent("result_rendered", {
+        sessionId,
+        recommendedProductIds: recommendJson.data.top3.map((item) => item.productId),
+      });
 
       const explainResponse = await fetch("/api/recommend/explain", {
         method: "POST",
@@ -94,6 +98,9 @@ export function ResultClient({ sessionId }: ResultClientProps) {
 
   const submitLead = async () => {
     if (!profile || !data || !selectedProductId) return;
+
+    logEvent("result_cta_click", { sessionId: profile.sessionId, selectedProductId });
+    logEvent("lead_cta_clicked", { sessionId: profile.sessionId, selectedProductId });
 
     const payload: LeadHandoffPayload = {
       leadId: "",
@@ -153,10 +160,12 @@ export function ResultClient({ sessionId }: ResultClientProps) {
     );
   }
 
-  if (top3.length < 1) {
+  if (top3.length < 3) {
     return (
       <main className="mx-auto max-w-3xl px-4 py-8">
-        <p>조건에 맞는 상품이 없어요. 예산/기능 조건을 완화해보세요.</p>
+        <p>
+          추천 결과가 3개 미만이에요. 예산/기능 조건을 조금 완화하면 더 정확히 비교할 수 있어요.
+        </p>
         <Link
           href="/funnel/apply"
           className="mt-4 inline-block rounded-lg bg-black px-4 py-2 text-white"
@@ -208,6 +217,10 @@ export function ResultClient({ sessionId }: ResultClientProps) {
               onClick={() => {
                 setSelectedProductId(product.productId);
                 logEvent("result_product_select", {
+                  sessionId,
+                  selectedProductId: product.productId,
+                });
+                logEvent("recommendation_card_clicked", {
                   sessionId,
                   selectedProductId: product.productId,
                 });

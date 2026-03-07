@@ -14,12 +14,12 @@
 
 ## 2. 구현 시작 체크리스트
 
-- [ ] `/funnel/result` 라우트 생성
-- [ ] 추천 API(`POST /api/recommend/session`) 생성
-- [ ] 설명 API(`POST /api/recommend/explain`) 생성
-- [ ] 리드 API 응답 포맷을 공통 규약으로 통일
-- [ ] 상품 mock 데이터를 v1 데이터 계약으로 확장
-- [ ] 이벤트 7종(`onboarding_*`, `result_*`, `lead_submit`) 연동
+- [x] `/funnel/result` 라우트 생성
+- [x] 추천 API(`POST /api/recommend/session`) 생성
+- [x] 설명 API(`POST /api/recommend/explain`) 생성
+- [x] 리드 API 응답 포맷을 공통 규약으로 통일
+- [x] 상품 mock 데이터를 v1 데이터 계약으로 확장
+- [x] 이벤트 7종(`onboarding_*`, `result_*`, `lead_submit`) 연동
 
 ## 3. Done 정의
 
