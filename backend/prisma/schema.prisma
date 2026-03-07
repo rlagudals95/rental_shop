@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LeadStatus {
+  new
+  assigned
+  contacting
+  qualified
+  contracted
+  dropped
+}
+
+model Product {
+  id                 String   @id @default(cuid())
+  productId           String   @unique
+  brand               String
+  modelName           String
+  category            String
+  monthlyFee          Int
+  promoFee            Int
+  promoDurationMonth  Int
+  postPromoFee        Int
+  mandatoryUseMonth   Int
+  contractTotalMonth  Int
+  managementType      String
+  installFee          Int      @default(0)
+  removalFee          Int      @default(0)
+  supportsMove        Boolean  @default(true)
+  terminationRuleNote String
+  features            String[]
+  sizeTier            String
+  stockStatus         String   @default("active")
+  updatedAt           DateTime @updatedAt
+  createdAt           DateTime @default(now())
+}
+
+model RecommendationSession {
+  id               String   @id @default(cuid())
+  sessionId        String   @unique
+  householdSize    Int
+  residenceType    String
+  movingWithin24m  Boolean
+  budgetRange      String
+  requiredFeatures String[]
+  wantsIce         Boolean
+  carePreference   String
+  spaceConstraint  String
+  biggestConcern   String
+  summary          String?
+  top3ProductIds   String[]
+  createdAt        DateTime @default(now())
+}
+
+model Lead {
+  id                String     @id @default(cuid())
+  leadId            String     @unique
+  sessionId         String
+  customerName      String
+  customerPhone     String
+  selectedProductId String
+  top3              String[]
+  summary           String
+  riskNotes         String[]
+  status            LeadStatus @default(new)
+  submittedAt       DateTime
+  lastSubmittedAt   DateTime
+  createdAt         DateTime   @default(now())
+
+  @@index([customerPhone, selectedProductId, lastSubmittedAt])
+}
